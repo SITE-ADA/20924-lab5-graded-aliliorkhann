@@ -91,7 +91,7 @@ public class EventServiceImpl implements EventService {
 
 return eventRepository.findAll().stream()
         .filter(event -> event.getTag() != null &&
-                event.getTag().equalsIgnoreCase(tag))
+                ((String) event.getTag()).equalsIgnoreCase(tag))
         .toList();
     }
 
