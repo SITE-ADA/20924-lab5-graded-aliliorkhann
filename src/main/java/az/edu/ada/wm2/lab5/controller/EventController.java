@@ -153,3 +153,16 @@ public ResponseEntity<List<Event>> getEventsByDateRange(
     List<Event> events = eventService.getEventsByDateRange(start, end);
     return ResponseEntity.ok(events);
 }
+
+@GetMapping("/filter/price")
+public ResponseEntity<List<Event>> getEventsByPriceRange(
+        @RequestParam BigDecimal min,
+        @RequestParam BigDecimal max) {
+
+    if (min == null || max == null || min.compareTo(max) > 0) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    List<Event> events = eventService.getEventsByPriceRange(min, max);
+    return ResponseEntity.ok(events);
+}
