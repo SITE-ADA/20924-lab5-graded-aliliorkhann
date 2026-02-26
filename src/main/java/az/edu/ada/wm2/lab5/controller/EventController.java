@@ -166,3 +166,24 @@ public ResponseEntity<List<Event>> getEventsByPriceRange(
     List<Event> events = eventService.getEventsByPriceRange(min, max);
     return ResponseEntity.ok(events);
 }
+@GetMapping("/filter/tag")
+public ResponseEntity<List<Event>> getEventsByTag(
+        @RequestParam String tag) {
+
+    try {
+        List<Event> events = eventService.getEventsByTag(tag);
+        return ResponseEntity.ok(events);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+@GetMapping("/upcoming")
+public ResponseEntity<List<Event>> getUpcomingEvents() {
+    try {
+        List<Event> events = eventService.getUpcomingEvents();
+        return ResponseEntity.ok(events);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
