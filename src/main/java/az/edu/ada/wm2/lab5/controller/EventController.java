@@ -1,4 +1,4 @@
-package az.edu.ada.wm2.lab5.controller;
+package az.edu.ada.wm2.lab5.controller; 
 
 import az.edu.ada.wm2.lab5.model.Event;
 import az.edu.ada.wm2.lab5.service.EventService;
@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -95,4 +96,94 @@ public class EventController {
         }
     }
 
+}
+
+@GetMapping("/filter/tag")
+public ResponseEntity<List<Event>> getEventsByTag(@RequestParam String tag) {
+    List<Event> events = eventService.getEventsByTag(tag);
+    return ResponseEntity.ok(events);
+}
+
+@GetMapping("/filter/price")
+public ResponseEntity<List<Event>> getEventsByPriceRange(
+        @RequestParam BigDecimal min,
+        @RequestParam BigDecimal max) {
+
+    List<Event> events = eventService.getEventsByPriceRange(min, max);
+    return ResponseEntity.ok(events);
+}
+
+@GetMapping("/upcoming")
+public ResponseEntity<List<Event>> getUpcomingEvents() {
+    List<Event> events = eventService.getUpcomingEvents();
+    return ResponseEntity.ok(events);
+}
+
+@PatchMapping("/{id}/price")
+public ResponseEntity<Event> updateEventPrice(
+        @PathVariable UUID id,
+        @RequestParam(required = false) BigDecimal price) {
+
+    if (price == null) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    if (price.compareTo(BigDecimal.ZERO) < 0) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    Event updated = eventService.updateEventPrice(id, price);
+
+    if (updated == null) {
+        return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok(updated);
+}
+
+@GetMapping("/filter/date")
+public ResponseEntity<List<Event>> getEventsByDateRange(
+        @RequestParam LocalDateTime start,
+        @RequestParam LocalDateTime end) {
+
+    if (start == null || end == null || start.isAfter(end)) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    List<Event> events = eventService.getEventsByDateRange(start, end);
+    return ResponseEntity.ok(events);
+}
+
+@GetMapping("/filter/price")
+public ResponseEntity<List<Event>> getEventsByPriceRange(
+        @RequestParam BigDecimal min,
+        @RequestParam BigDecimal max) {
+
+    if (min == null || max == null || min.compareTo(max) > 0) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    List<Event> events = eventService.getEventsByPriceRange(min, max);
+    return ResponseEntity.ok(events);
+}
+@GetMapping("/filter/tag")
+public ResponseEntity<List<Event>> getEventsByTag(
+        @RequestParam String tag) {
+
+    try {
+        List<Event> events = eventService.getEventsByTag(tag);
+        return ResponseEntity.ok(events);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+}
+
+@GetMapping("/upcoming")
+public ResponseEntity<List<Event>> getUpcomingEvents() {
+    try {
+        List<Event> events = eventService.getUpcomingEvents();
+        return ResponseEntity.ok(events);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
 }

@@ -85,27 +85,64 @@ public class EventServiceImpl implements EventService {
     // Custom methods
     @Override
     public List<Event> getEventsByTag(String tag) {
-        return List.of();
+        if (tag == null || tag.isBlank()) {
+    return List.of();
+}
+
+return eventRepository.findAll().stream()
+        .filter(event -> event.getTag() != null &&
+                ((String) event.getTag()).equalsIgnoreCase(tag))
+        .toList();
     }
 
     @Override
     public List<Event> getUpcomingEvents() {
-        return List.of();
+       LocalDateTime now = LocalDateTime.now();
+
+    return eventRepository.findAll().stream()
+        .filter(event -> event.getDate() != null &&
+                event.getDate().isAfter(now))
+        .toList();
     }
 
     @Override
     public List<Event> getEventsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
-       return List.of();
+       if (minPrice == null || maxPrice == null || minPrice.compareTo(maxPrice) > 0) {
+    return List.of();
+}
+
+    return eventRepository.findAll().stream()
+        .filter(event -> event.getPrice() != null &&
+                event.getPrice().compareTo(minPrice) >= 0 &&
+                event.getPrice().compareTo(maxPrice) <= 0)
+        .toList();
     }
 
     @Override
     public List<Event> getEventsByDateRange(LocalDateTime start, LocalDateTime end) {
-        return List.of();
+     if (start == null || end == null || start.isAfter(end)) {
+    return List.of();
+}
+
+    return eventRepository.findAll().stream()
+        .filter(event -> event.getDate() != null &&
+                (event.getDate().isEqual(start) || event.getDate().isAfter(start)) &&
+                (event.getDate().isEqual(end) || event.getDate().isBefore(end)))
+        .toList();
     }
 
     @Override
     public Event updateEventPrice(UUID id, BigDecimal newPrice) {
-        return null;
+        if (id == null || newPrice == null || newPrice.compareTo(BigDecimal.ZERO) < 0) {
+    return null;
+}
+
+    return eventRepository.findById(id)
+        .map(event -> {
+            event.setPrice(newPrice);
+            return eventRepository.save(event);
+        })
+        .orElse(null);
     }
 
 }

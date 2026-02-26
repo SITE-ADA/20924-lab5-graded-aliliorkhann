@@ -112,4 +112,24 @@ public class Event {
                 ", durationMinutes=" + durationMinutes +
                 '}';
     }
+
+    public LocalDateTime getDate() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDate'");
+    }
+
+    public BigDecimal getPrice() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getPrice'");
+    }
+
+    public Object getTag() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getTag'");
+    }
+
+    public void setPrice(BigDecimal newPrice) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setPrice'");
+    }
 }
