@@ -1,4 +1,4 @@
-package az.edu.ada.wm2.lab5.controller;
+package az.edu.ada.wm2.lab5.controller; 
 
 import az.edu.ada.wm2.lab5.model.Event;
 import az.edu.ada.wm2.lab5.service.EventService;
@@ -139,4 +139,17 @@ public ResponseEntity<Event> updateEventPrice(
     }
 
     return ResponseEntity.ok(updated);
+}
+
+@GetMapping("/filter/date")
+public ResponseEntity<List<Event>> getEventsByDateRange(
+        @RequestParam LocalDateTime start,
+        @RequestParam LocalDateTime end) {
+
+    if (start == null || end == null || start.isAfter(end)) {
+        return ResponseEntity.badRequest().build();
+    }
+
+    List<Event> events = eventService.getEventsByDateRange(start, end);
+    return ResponseEntity.ok(events);
 }
